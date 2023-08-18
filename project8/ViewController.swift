@@ -15,6 +15,12 @@ class ViewController: UIViewController {
     var scoreLabel: UILabel!
     var letterButtons = [UIButton]()
     
+    var activatedButtons = [UIButton]()
+    var solutions = [String]()
+
+    var score = 0
+    var level = 1
+    
     override func loadView() {
         view = UIView()
         view.backgroundColor = .white
@@ -106,11 +112,11 @@ class ViewController: UIViewController {
                 button.titleLabel?.font = UIFont.systemFont(ofSize: 36)
                 button.setTitle("WWW", for: .normal)
                 
-                let frame = CGRect(x: col * width, y: row * height, width: width, height: height)
-                button.frame = frame
+                button.frame = CGRect(x: col * width, y: row * height, width: width, height: height)
                 
                 buttonsView.addSubview(button)
                 letterButtons.append(button)
+                button.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
             }
         }
         
@@ -119,11 +125,28 @@ class ViewController: UIViewController {
         submitButton.backgroundColor = .cyan
         clearButton.backgroundColor = .green
         buttonsView.backgroundColor = .gray
+        
+        
+        submitButton.addTarget(self, action: #selector(submitTapped), for: .touchUpInside)
+        clearButton.addTarget(self, action: #selector(clearTapped), for: .touchUpInside)
+        
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+    }
+    
+    @objc func buttonTapped(_ sender: UIButton){
+        
+    }
+    
+    @objc func submitTapped(_ sender: UIButton){
+        
+    }
+    
+    @objc func clearTapped(_ sender: UIButton){
+        
     }
 
     
