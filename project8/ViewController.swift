@@ -134,7 +134,7 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
+        loadLevel()
     }
     
     @objc func buttonTapped(_ sender: UIButton){
@@ -164,15 +164,24 @@ class ViewController: UIViewController {
                     let answer = parts[0]
                     let clue = parts[1]
                     
-                    clueString = "\(index + 1). \(clue)\n"
+                    clueString += "\(index + 1). \(clue)\n"
                     let solutionWord = answer.replacingOccurrences(of: "|", with: "")
-                    solutionString = "\(solutionWord.count) letters\n"
+                    solutionString += "\(solutionWord.count) letters\n"
                     solutions.append(solutionWord)
                     
                     let bits = answer.components(separatedBy: "|")
                     letterBits += bits
                     
                 }
+            }
+        }
+        cluesLabel.text = clueString
+        answersLabel.text = solutionString
+        letterButtons.shuffle()
+        
+        if letterButtons.count == letterBits.count {
+            for i in 0..<letterButtons.count{
+                letterButtons[i].setTitle(letterBits[i], for: .normal)
             }
         }
     }
