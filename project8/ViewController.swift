@@ -18,6 +18,7 @@ class ViewController: UIViewController {
     var activatedButtons = [UIButton]()
     var solutions = [String]()
 
+    var maxScore = 7
     var score = 0 {
         didSet{
             scoreLabel.text = "Score: \(score)"
@@ -61,16 +62,25 @@ class ViewController: UIViewController {
         view.addSubview(currentAnswer)
         
         let submitButton = UIButton(type: .system)
+        submitButton.layer.borderWidth = 1
+        submitButton.layer.borderColor = UIColor.lightGray.cgColor
+        submitButton.layer.cornerRadius = 10
         submitButton.translatesAutoresizingMaskIntoConstraints = false
         submitButton.setTitle("SUBMIT", for: .normal)
         view.addSubview(submitButton)
         
         let clearButton = UIButton(type: .system)
+        clearButton.layer.borderWidth = 1
+        clearButton.layer.borderColor = UIColor.lightGray.cgColor
+        clearButton.layer.cornerRadius = 10
         clearButton.translatesAutoresizingMaskIntoConstraints = false
         clearButton.setTitle("CLEAR", for: .normal)
         view.addSubview(clearButton)
         
         let buttonsView = UIView()
+        buttonsView.layer.borderWidth = 1
+        buttonsView.layer.borderColor = UIColor.lightGray.cgColor
+        buttonsView.layer.cornerRadius = 20
         buttonsView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(buttonsView)
         
@@ -91,10 +101,12 @@ class ViewController: UIViewController {
             currentAnswer.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.5),
             currentAnswer.topAnchor.constraint(equalTo: cluesLabel.bottomAnchor, constant: 20),
             
+            clearButton.widthAnchor.constraint(equalToConstant: 100),
             clearButton.topAnchor.constraint(equalTo: currentAnswer.bottomAnchor, constant: 20),
             clearButton.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: -100),
             clearButton.heightAnchor.constraint(equalToConstant: 44),
             
+            submitButton.widthAnchor.constraint(equalToConstant: 100),
             submitButton.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: 100),
             submitButton.centerYAnchor.constraint(equalTo: clearButton.centerYAnchor),
             submitButton.heightAnchor.constraint(equalToConstant: 44),
@@ -123,13 +135,6 @@ class ViewController: UIViewController {
                 button.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
             }
         }
-        
-        //cluesLabel.backgroundColor = .red
-        //answersLabel.backgroundColor = .blue
-        //submitButton.backgroundColor = .cyan
-        //clearButton.backgroundColor = .green
-        //buttonsView.backgroundColor = .gray
-        
         
         submitButton.addTarget(self, action: #selector(submitTapped), for: .touchUpInside)
         clearButton.addTarget(self, action: #selector(clearTapped), for: .touchUpInside)
@@ -162,11 +167,17 @@ class ViewController: UIViewController {
             currentAnswer.text = ""
             score += 1
             
-            if score % 7 == 0 {
+            if score == maxScore {
                 let ac = UIAlertController(title: "Well done!", message: "Are you ready for the next level?", preferredStyle: .alert)
                 ac.addAction(UIAlertAction(title: "Let's go!", style: .default, handler: levelUp))
                 present(ac, animated: true)
             }
+        } else {
+            let ac = UIAlertController(title: "Incorrect answer", message: "Such word does not exist", preferredStyle: .alert)
+            ac.addAction(UIAlertAction(title: "OK", style: .default))
+            present(ac, animated: true)
+            score -= 1
+            maxScore -= 1
         }
     }
     
