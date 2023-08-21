@@ -120,11 +120,11 @@ class ViewController: UIViewController {
             }
         }
         
-        cluesLabel.backgroundColor = .red
-        answersLabel.backgroundColor = .blue
-        submitButton.backgroundColor = .cyan
-        clearButton.backgroundColor = .green
-        buttonsView.backgroundColor = .gray
+        //cluesLabel.backgroundColor = .red
+        //answersLabel.backgroundColor = .blue
+        //submitButton.backgroundColor = .cyan
+        //clearButton.backgroundColor = .green
+        //buttonsView.backgroundColor = .gray
         
         
         submitButton.addTarget(self, action: #selector(submitTapped), for: .touchUpInside)
@@ -138,15 +138,41 @@ class ViewController: UIViewController {
     }
     
     @objc func buttonTapped(_ sender: UIButton){
+        guard let buttonTitle = sender.titleLabel?.text else { return }
         
+        currentAnswer.text = currentAnswer.text?.appending(buttonTitle)
+        activatedButtons.append(sender)
+        sender.isHidden = true
     }
     
     @objc func submitTapped(_ sender: UIButton){
+        guard let answerText = currentAnswer.text else { return }
         
+        if let solutionPosition = solutions.firstIndex(of: answerText) {
+            activatedButtons.removeAll()
+            
+            var splitAnswers = answersLabel.text?.components(separatedBy: "\n")
+            splitAnswers?[solutionPosition] = answerText
+            answersLabel.text = splitAnswers?.joined(separator: "\n")
+            
+            currentAnswer.text = ""
+            score += 1
+            
+            if score % 7 == 0 {
+                let ac = UIAlertController(title: "Well done!", message: "Are you ready for the next level?", preferredStyle: .alert)
+                ac.addAction(UIAlertAction(title: "Let's go!", style: .default, handler: levelUp))
+                present(ac, animated: true)
+            }
+        }
     }
     
     @objc func clearTapped(_ sender: UIButton){
+        currentAnswer.text = ""
         
+        for button in activatedButtons {
+            button.isHidden = false
+        }
+        activatedButtons.removeAll()
     }
 
     func loadLevel(){
@@ -183,6 +209,17 @@ class ViewController: UIViewController {
             for i in 0..<letterButtons.count{
                 letterButtons[i].setTitle(letterBits[i], for: .normal)
             }
+        }
+    }
+    
+    func levelUp(_ action: UIAlertAction){
+        level += 1
+        solutions.removeAll()
+        
+        loadLevel()
+        
+        for button in letterButtons {
+            button.isHidden = false
         }
     }
 }
